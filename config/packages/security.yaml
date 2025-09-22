@@ -18,18 +18,27 @@ security:
     main:
       lazy: true
       provider: users_in_memory
-      # …
-
-    auth:
-      pattern: ^/api/auth
-      stateless: true
-      provider: app_user_provider
 
     api:
       pattern: ^/api
       stateless: true
       provider: app_user_provider    # <-- lo añadimos aquí
       jwt: ~
+
+    access_control:
+      # 1) Auth API (anon)
+      - { path: ^/api/auth/registrar$,      roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }
+      - { path: ^/api/auth/login$,          roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }
+      - { path: ^/api/auth/refresh-token$,  roles: IS_AUTHENTICATED_ANONYMOUSLY, methods: [POST] }
+
+      # 2) Usuarios API (solo ADMIN puede CRUD)
+      - { path: ^/api/usuarios,              roles: ROLE_ADMIN }
+
+      # 3) Categorías, Tareas y Reportes API (cualquier USER logueado)
+      - { path: ^/api/categorias,            roles: ROLE_USER }
+      - { path: ^/api/tareas,                roles: ROLE_USER }
+      - { path: ^/api/reportes,              roles: ROLE_USER }
+
 
 when@test:
   security:
