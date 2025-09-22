@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block body %}
+  <div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-sm p-4" style="max-width: 400px; width:100%">
+      <h2 class="text-center mb-4">Iniciar Sesión</h2>
+
+      <form id="login-form" novalidate>
+        <div class="mb-3">
+          <label for="email" class="form-label">
+            <i class="fa-regular fa-envelope me-2"></i>Correo
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="tu@correo.com"
+            required
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="form-label">
+            <i class="fa-solid fa-lock me-2"></i>Contraseña
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="••••••••"
+            required
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 mb-2">
+          <i class="fa-solid fa-right-to-bracket me-1"></i>Entrar
+        </button>
+
+        {# Aquí añadimos el enlace a registro #}
+        <p class="text-center small">
+          ¿No tienes cuenta?
+          <a href="{{ path('app_register') }}">Regístrate</a>
+        </p>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+  {{ parent() }}
+  <script src="{{ asset('build/auth.js') }}"></script>
+{% endblock %}
+
+

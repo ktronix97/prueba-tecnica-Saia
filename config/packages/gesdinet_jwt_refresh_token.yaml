@@ -1,0 +1,12 @@
+gesdinet_jwt_refresh_token:
+  # TTL en segundos (86400 = 1 día)
+  ttl: 86400
+
+  # Tu entidad de refresh token
+  refresh_token_class:   App\Entity\RefreshToken
+
+  # Repositorio/servicio para cargar Usuarios
+  user_provider:         App\Repository\UsuarioRepository
+
+  # Campo de tu Usuario que usas como identidad
+  user_identity_field:   'email'

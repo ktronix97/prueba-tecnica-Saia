@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+  <h1>Dashboard</h1>
+
+  <section>
+    <div id="app-tasks"></div>
+  </section>
+
+  <section>
+    <div id="app-reports"></div>
+  </section>
+
+  {% if is_granted('ROLE_ADMIN') %}
+    <section>
+      <div id="app-users"></div>
+    </section>
+  {% endif %}
+{% endblock %}
