@@ -42,6 +42,104 @@ bash
     php bin/console doctrine:database:create
     php bin/console doctrine:migrations:migrate
 
+# 🧪 Prueba Técnica - Proyecto Symfony + Frontend híbrido
+
+## 📋 Descripción
+
+Este proyecto implementa una API RESTful en Symfony 7.2 con autenticación JWT, gestión de usuarios, tareas, categorías y reportes. El frontend híbrido combina Vue 3 (Composition API) y jQuery para una experiencia dinámica y accesible.
+
+---
+
+## 🚀 Instalación y ejecución
+
+### 1️⃣ Clonar el repositorio
+
+```bash
+git clone https://github.com/usuario/proyecto.git
+cd proyecto
+2️⃣ Instalar dependencias
+Symfony (backend)
+bash
+composer install
+composer create-project symfony/skeleton nombre-del-proyecto
+
+Esto crea un proyecto mínimo de Symfony. Luego puedes añadir los paquetes necesarios:
+bash
+composer require webapp
+
+Frontend (Vue 3 + jQuery)
+bash
+npm install
+
+3️⃣ Configurar entorno
+Copia el archivo .env y personaliza tus credenciales:
+
+bash
+cp .env .env.local
+Edita .env.local:
+
+dotenv
+DATABASE_URL="mysql://usuario:clave@127.0.0.1:3306/nombre_bd?serverVersion=8.0.32"
+MAILER_DSN=smtp://usuario:clave@smtp.mailtrap.io:2525
+
+
+5️⃣ Crear usuario administrador por defecto
+bash
+php bin/console app:crear-admin
+Este comando crea:
+
+Email: admin@demo.com
+
+Contraseña: admin123
+
+Rol: ROLE_ADMIN
+
+6️⃣ Compilar frontend
+bash
+npm run build
+Para desarrollo: npm run dev
+
+7️⃣ Ejecutar servidor Symfony CLI
+bash
+symfony serve
+
+O con PHP:
+
+bash
+php -S localhost:8000 -t public
+
+🔐 Acceso al sistema
+
+Endpoint: POST /api/auth/login
+
+Email: admin@demo.com
+Contraseña: admin123
+Autenticación: JWT
+
+📦 Dependencias clave
+Symfony
+
+symfony/orm-pack
+symfony/security-bundle
+lexik/jwt-authentication-bundle
+symfony/maker-bundle
+symfony/validator
+symfony/serializer
+
+Frontend
+
+vue@3
+jquery
+vite
+
+
+🧠 Notas adicionales
+El proyecto usa access_control para proteger rutas según roles.
+
+El login y registro están protegidos por JWT.
+
+Se recomienda usar Postman o Insomnia para probar los endpoints.
+
 4. Configuración de JWT
 En tu archivo .env añade:
 
