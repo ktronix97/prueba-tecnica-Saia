@@ -1,47 +1,52 @@
-import axios from "axios";
-import { createApp } from "vue";
+import { api } from "./api.js";
+import "./dashboard.js";
+ 
+document.addEventListener("DOMContentLoaded", () => {
+  const user = api.getCurrentUser();
 
-// Configuración global de Axios
-axios.defaults.baseURL = "/api";
-axios.interceptors.request.use(config => {
-    const token = localStorage.getItem("access_token");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
+  if (user) {
+    // Mostrar elementos de sesión activa
+    const navLogin = document.getElementById("nav-login");
+    const navDashboard = document.getElementById("nav-dashboard");
+    const navLogout = document.getElementById("nav-logout");
+
+    if (navLogin) navLogin.classList.add("d-none");
+    if (navDashboard) navDashboard.classList.remove("d-none");
+    if (navLogout) navLogout.classList.remove("d-none");
+
+    // Mostrar email en dashboard si existe el contenedor
+    const emailEl = document.getElementById("user-email");
+    if (emailEl) emailEl.textContent = user.email;
+
+    // Mostrar sección admin si el rol lo permite
+    if (user.roles?.includes("ROLE_ADMIN")) {
+      const adminSection = document.getElementById("admin-section");
+      if (adminSection) adminSection.classList.remove("d-none");
+    }
+  } else {
+    // Usuario no autenticado
+    const navLogin = document.getElementById("nav-login");
+    const navDashboard = document.getElementById("nav-dashboard");
+    const navLogout = document.getElementById("nav-logout");
+
+    if (navLogin) navLogin.classList.remove("d-none");
+    if (navDashboard) navDashboard.classList.add("d-none");
+    if (navLogout) navLogout.classList.add("d-none");
+
+    // Si estás en una vista protegida, redirige
+    const emailEl = document.getElementById("user-email");
+    if (emailEl) window.location.href = "/login";
+  }
+
+  // Logout funcional
+  const navLogout = document.getElementById("nav-logout");
+  if (navLogout) {
+    navLogout.addEventListener("click", e => {
+      e.preventDefault();
+      localStorage.clear();
+      window.location.href = "/login";
+    });
+  }
 });
 
-// Interceptor de refresh token
-axios.interceptors.response.use(
-    response => response,
-    async error => {
-        if (error.response?.status === 401) {
-            const refresh = localStorage.getItem("refresh_token");
-            if (refresh) {
-                try {
-                    const { data } = await axios.post("/auth/refresh", { refresh_token: refresh });
-                    localStorage.setItem("access_token", data.access_token);
-                    error.config.headers.Authorization = `Bearer ${data.access_token}`;
-                    return axios(error.config);
-                } catch (e) {
-                    localStorage.clear();
-                    window.location.href = "/login";
-                }
-            }
-        }
-        return Promise.reject(error);
-    }
-);
 
-// Montaje condicional de apps Vue
-import Tasks from "./tasks.js";
-import Reports from "./reports.js";
-import Users from "./users.js";
-
-if (document.querySelector("#app-tasks")) {
-    createApp(Tasks).mount("#app-tasks");
-}
-if (document.querySelector("#app-reports")) {
-    createApp(Reports).mount("#app-reports");
-}
-if (document.querySelector("#app-users")) {
-    createApp(Users).mount("#app-users");
-}

@@ -2,28 +2,35 @@ import { ref } from "vue";
 import { api } from "./api.js";
 
 export default {
-    setup() {
-    const filters = ref({ estado: "", prioridad: "", usuario: "" });
+  template: `
+    <div>
+      <h2>Reportes</h2>
+      <button @click="download('pdf')">Descargar PDF</button>
+      <button @click="download('csv')">Descargar CSV</button>
+    </div>
+  `,
+  setup() {
+    const download = async type => {
+      try {
+        const filters = {}; // puedes agregar filtros si lo deseas
+        const res =
+          type === "pdf"
+            ? await api.reportes.downloadPdf(filters)
+            : await api.reportes.downloadCsv(filters);
 
-    const download = async (type) => {
-        const fn = type === "pdf" ? api.reports.downloadPdf : api.reports.downloadCsv;
-        const { data } = await fn(filters.value);
-        const blob = new Blob([data]);
-        const url = window.URL.createObjectURL(blob);
+        const blob = new Blob([res.data]);
+        const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
         a.download = `reporte.${type}`;
         a.click();
+      } catch (err) {
+        console.error("Error al descargar reporte:", err);
+      }
     };
 
-    return { filters, download };
-    },
-template: `
-    <div>
-        <h2>Reportes</h2>
-        <button @click="download('pdf')">Descargar PDF</button>
-        <button @click="download('csv')">Descargar CSV</button>
-    </div>
-`
+    return { download };
+  }
 };
+
 

@@ -2,40 +2,66 @@ import { ref, onMounted } from "vue";
 import { api } from "./api.js";
 
 export default {
-    setup() {
+  template: `
+    <div>
+      <h2>Tareas</h2>
+
+      <button @click="addDemo">Agregar tarea demo</button>
+
+      <ul v-if="tasks.length">
+        <li v-for="t in tasks" :key="t.id">
+          {{ t.titulo }} - {{ t.estado }}
+          <button @click="deleteTask(t.id)">Eliminar</button>
+        </li>
+      </ul>
+
+      <p v-else>No hay tareas registradas.</p>
+    </div>
+  `,
+
+  setup() {
     const tasks = ref([]);
-    const loading = ref(false);
 
     const fetchTasks = async () => {
-        loading.value = true;
-        const { data } = await api.tasks.list();
-        tasks.value = data;
-        loading.value = false;
+      try {
+        const res = await api.tareas.list();
+        // Maneja tanto { data: [...] } como directamente [...]
+        tasks.value = Array.isArray(res?.data) ? res.data : res ?? [];
+      } catch (err) {
+        console.error("Error al cargar tareas:", err);
+        tasks.value = [];
+      }
     };
 
-    const addTask = async (task) => {
-        await api.tasks.create(task);
-        fetchTasks();
+    const addDemo = async () => {
+      try {
+        await api.tareas.create({
+          titulo: "Demo",
+          estado: "pendiente"
+        });
+        fetchTasks(); // recarga después de crear
+      } catch (err) {
+        console.error("Error al crear tarea:", err);
+      }
     };
 
-    const deleteTask = async (id) => {
-        await api.tasks.delete(id);
-        fetchTasks();
+    const deleteTask = async id => {
+      try {
+        await api.tareas.delete(id);
+        fetchTasks(); // recarga después de eliminar
+      } catch (err) {
+        console.error("Error al eliminar tarea:", err);
+      }
     };
 
     onMounted(fetchTasks);
 
-    return { tasks, loading, addTask, deleteTask };
-    },
-template: `
-    <div>
-        <h2>Tareas</h2>
-        <ul>
-            <li v-for="t in tasks" :key="t.id">
-            {{ t.titulo }} - {{ t.estado }}
-            <button @click="deleteTask(t.id)">Eliminar</button>
-            </li>
-        </ul>
-    </div>
-`
+    return {
+      tasks,
+      addDemo,
+      deleteTask
+    };
+  }
 };
+
+

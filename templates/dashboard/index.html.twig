@@ -1,19 +1,37 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-  <h1>Dashboard</h1>
+  <h1 class="mb-4">Dashboard</h1>
+  <p>Bienvenida, <span id="user-email" class="fw-bold text-primary"></span></p>
 
-  <section>
-    <div id="app-tasks"></div>
+  <nav class="mb-4">
+    <button id="nav-dashboard" class="btn btn-outline-primary d-none">Dashboard</button>
+    <button id="nav-logout" class="btn btn-outline-danger d-none">Logout</button>
+  </nav>
+
+  <section id="app-tasks" class="mb-5">
+    <div class="alert alert-info">Cargando tareas...</div>
   </section>
 
-  <section>
-    <div id="app-reports"></div>
+  <section id="app-reports" class="mb-5">
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-primary" id="btn-download-pdf">
+        <i class="fas fa-file-pdf"></i> Descargar PDF
+      </button>
+      <button class="btn btn-outline-success" id="btn-download-csv">
+        <i class="fas fa-file-csv"></i> Descargar CSV
+      </button>
+    </div>
   </section>
 
   {% if is_granted('ROLE_ADMIN') %}
-    <section>
-      <div id="app-users"></div>
+    <section id="admin-section" class="mb-5 d-none">
+      <h2>Administración</h2>
+      <div id="app-users">
+        <div class="alert alert-warning">Cargando usuarios...</div>
+      </div>
     </section>
   {% endif %}
 {% endblock %}
+
+

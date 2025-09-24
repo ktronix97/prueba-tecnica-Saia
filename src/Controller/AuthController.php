@@ -79,12 +79,19 @@ class AuthController extends AbstractController
         }
 
         try {
+            dump($rawRt); // Verifica que el token esté llegando
             $tokens = $this->auth->refresh($rawRt);
+            dump($tokens); // Verifica qué devuelve el servicio
             return $this->json($tokens);
-        } catch (\RuntimeException $e) {
-            return $this->json(['error'=>$e->getMessage()], 401);
+        } catch (\Throwable $e) {
+            return $this->json([
+                'error' => 'Error interno',
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ], 500);
         }
     }
+
 
     #[Route(path: '/logout', name: 'app_logout', methods: ['POST'])]
     public function logout(): void

@@ -54,7 +54,7 @@
 
 {% block javascripts %}
   {{ parent() }}
-  <script src="{{ asset('build/auth.js') }}"></script>
+      <script type="module" src="{{ asset('build/auth.js') }}"></script>
 {% endblock %}
 
 

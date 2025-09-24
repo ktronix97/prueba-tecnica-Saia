@@ -1,21 +1,24 @@
 import { api } from "./api.js";
 
 $(document).ready(function () {
-    // Login
+  
     document
     .getElementById('login-form')
     .addEventListener('submit', async e => {
-      e.preventDefault(); // ⬅️ evita el GET nativo
+      e.preventDefault(); 
       
       const email      = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
       try {
-        const { data } = await api.login(email, password);
-        localStorage.setItem('access_token', data.access_token);
+        const { access_token, refresh_token } = await api.login(email, password);
+        localStorage.setItem('access_token', access_token);
+        console.log(atob(localStorage.getItem("access_token").split(".")[1]));
+        localStorage.setItem('refresh_token', refresh_token);
         window.location.href = '/dashboard';
       } catch (err) {
-        alert(err.response?.data?.error || 'Credenciales inválidas');
+        const mensaje = err.response?.data?.error || err.message || 'Error desconocido';
+        alert(`Login fallido: ${mensaje}`);
       }
     });
 

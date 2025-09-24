@@ -24,7 +24,7 @@ class RefreshTokenRepository extends ServiceEntityRepository
     {
         $all = $this->findBy(['revoked' => false]);
         foreach ($all as $token) {
-            if ($token->validate($raw) && $token->getExpiresAt() > new DateTimeImmutable()) {
+            if ($token->validateRawToken($raw) && $token->getExpiresAt() > new DateTimeImmutable()) {
                 return $token;
             }
         }
@@ -43,4 +43,10 @@ class RefreshTokenRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->execute();
     }
+
+    public function validate(string $raw): bool
+    {
+        return password_verify($raw, $this->getTokenHash());
+    }
+
 }

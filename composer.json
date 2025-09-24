@@ -3,7 +3,7 @@
     "type": "project",
     "license": "proprietary",
     "description": "A minimal Symfony project recommended to create bare bones applications",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
     "require": {
         "php": ">=8.2",
@@ -52,7 +52,8 @@
         "symfony/web-link": "7.2.*",
         "symfony/yaml": "7.2.*",
         "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0"
+        "twig/twig": "^2.12|^3.0",
+        "symfony/vite-bundle": "^0.1"
     },
     "config": {
         "allow-plugins": {
